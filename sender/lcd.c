@@ -65,7 +65,7 @@ void init_lcd() {
     wiringPiI2CWrite(fd, 0x08);
 }
 
-void clear() {
+void lcd_clear() {
     send_command(0x01);     //clear Screen
 }
 
