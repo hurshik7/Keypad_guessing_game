@@ -14,7 +14,7 @@ set(SOURCE_LIST ${SOURCE_DIR}/main.c ${SOURCE_DIR}/error.c ${SOURCE_DIR}/convers
 set(HEADER_LIST ${INCLUDE_DIR}/error.h ${INCLUDE_DIR}/conversion.h
         ${INCLUDE_DIR}/option_handler.h ${INCLUDE_DIR}/lcd.h ${INCLUDE_DIR}/keypad.h ${INCLUDE_DIR}/rudp_v2.h)
 
-set(SANITIZE TRUE)
+set(SANITIZE FALSE)
 
 add_compile_definitions(_POSIX_C_SOURCE=200809L)
 add_compile_definitions(_XOPEN_SOURCE=700)
@@ -154,5 +154,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+
 
 add_dependencies(${PROJECT_NAME} doxygen)
