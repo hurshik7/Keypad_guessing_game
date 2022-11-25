@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(sender
+project(guessing_client
         VERSION 0.0.1
         DESCRIPTION ""
         LANGUAGES C)
@@ -9,10 +9,12 @@ set(CMAKE_C_STANDARD 17)
 
 set(SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
 set(INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
-set(SOURCE_LIST ${SOURCE_DIR}/main.c ${SOURCE_DIR}/distance.c)
-set(HEADER_LIST ${INCLUDE_DIR}/distance.h)
+set(SOURCE_LIST ${SOURCE_DIR}/main.c ${SOURCE_DIR}/error.c ${SOURCE_DIR}/conversion.c
+        ${SOURCE_DIR}/option_handler.c ${SOURCE_DIR}/lcd.c ${SOURCE_DIR}/keypad.c ${SOURCE_DIR}/rudp_v2.c)
+set(HEADER_LIST ${INCLUDE_DIR}/error.h ${INCLUDE_DIR}/conversion.h
+        ${INCLUDE_DIR}/option_handler.h ${INCLUDE_DIR}/lcd.h ${INCLUDE_DIR}/keypad.h ${INCLUDE_DIR}/rudp_v2.h)
 
-set(SANITIZE TRUE)
+set(SANITIZE FALSE)
 
 add_compile_definitions(_POSIX_C_SOURCE=200809L)
 add_compile_definitions(_XOPEN_SOURCE=700)
@@ -82,7 +84,6 @@ if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
             "-Wvector-operation-performance"
             "-Walloc-zero"
             "-Wtrampolines"
-            "-Wtsan"
             "-Wformat-overflow=2"
             "-Wformat-signedness"
             "-Wjump-misses-init"
@@ -153,5 +154,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+
 
 add_dependencies(${PROJECT_NAME} doxygen)

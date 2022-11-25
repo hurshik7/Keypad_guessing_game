@@ -1,93 +1,89 @@
-#include "distance.h"
-#include <arpa/inet.h>
+#include "error.h"
+#include "keypad.h"
+#include "lcd.h"
+#include "rudp_v2.h"
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
-#define DELAY_TIME (200)
-#define PORT (5050)
-#define BUF_LEN (1024)
+#define DEFAULT_PORT (5050)
+#define BUFFER_SIZE (10)
 
-void setup_wiringPi()
-{
-	if(wiringPiSetup() == -1) { //when initialize wiring failed,print message to screen
-        printf("setup wiringPi failed !");
-        exit(EXIT_FAILURE);
+int count = 0;
+int loc = 8;
+char user_num[5] = {'\0'};
+char user_input[2];
+
+void key_print_lcd(unsigned char *a);
+
+void key_print_lcd(unsigned char *a) {
+    user_input[0] = getKey(a);
+    user_input[1] = '\0';
+    if ('0' <= user_input[0] && user_input[0] <= '9') {
+        user_num[count++] = user_input[0];
+        lcd_write(loc++, 1, user_input);
     }
 }
 
-int main(int argc, char *argv[]) 
-{
-	
-   	float dis;
-	setup_wiringPi();
-    ultraInit();
+int main(int argc, char *argv[]) {
+    // store user input (4 digits)
+    unsigned char pressed_keys[BUTTON_NUM];
+    unsigned char last_key_pressed[BUTTON_NUM];
 
-	struct sockaddr_in addr;
-    struct sockaddr_in to_addr;
+    while (1) {
+        keyRead(pressed_keys);
+        bool comp = keyCompare(pressed_keys, last_key_pressed);
+        if (!comp) {
+            key_print_lcd(pressed_keys);
+            keyCopy(last_key_pressed, pressed_keys);
+        }
+        delay(100);
+        if (count == 4) {
+            break;
+        }
+    }
+
+    // print user number on the lcd
+    lcd_clear();
+    lcd_write(0, 0, "Your number is..");
+    lcd_write(2, 1, user_num);
+
+    // send data to server
     int result;
-    int fd;
-    char data[BUF_LEN];
-    ssize_t nwrote;
+    struct sockaddr_in to_addr;
+    int sock_fd;
 
-    fd = socket(AF_INET, SOCK_DGRAM, 0); // NOLINT(android-cloexec-socket)
-
-    if(fd == -1)
-    {
-        perror("socket");
-        exit(EXIT_FAILURE); // NOLINT(concurrency-mt-unsafe)
+    // open a socket
+    sock_fd = socket(AF_INET, SOCK_DGRAM, 0);       // NOLINT(android-cloexec-socket)
+    if (sock_fd == -1) {
+        fatal_message(__FILE__, __func__, __LINE__, "[FAIL] open a socket", EXIT_FAILURE);
     }
 
-    addr.sin_family = AF_INET;
-    addr.sin_port = 0;
-    addr.sin_addr.s_addr = htonl(INADDR_ANY);
-
-    if(to_addr.sin_addr.s_addr == (in_addr_t) -1) // NOLINT(clang-analyzer-core.UndefinedBinaryOperatorResult)
-    {
-        perror("inet_addr");
-        exit(EXIT_FAILURE); // NOLINT(concurrency-mt-unsafe)
-    }
-
-    result = bind(fd, (struct sockaddr *)&addr, sizeof(struct sockaddr_in));
-
-    if(result == -1)
-    {
-        close(fd);
-        perror("bind");
-        exit(EXIT_FAILURE);  // NOLINT(concurrency-mt-unsafe)
-    }
-
+    // init server addr
     to_addr.sin_family = AF_INET;
-    to_addr.sin_port = htons(PORT);
+    to_addr.sin_port = htons(DEFAULT_PORT);
     to_addr.sin_addr.s_addr = inet_addr(argv[1]);
-
-    if(to_addr.sin_addr.s_addr ==  (in_addr_t)-1)
-    {
-        perror("inet_addr");
-        exit(EXIT_FAILURE); // NOLINT(concurrency-mt-unsafe)
-    }
-    
-    while(1) {
-        dis = disMeasure();
-		float dis_network_order = htons(dis);	
-		// send data here
-        printf("%0.2f cm\n",dis);
-		nwrote = sendto(fd, &dis_network_order, sizeof(float), 0, (struct sockaddr *)&to_addr, sizeof(to_addr));
-
-    	if(nwrote == -1) {
-        	close(fd);
-        	perror("recvfrom");
-        	exit(EXIT_FAILURE);  // NOLINT(concurrency-mt-unsafe)
-    	} else {
-			printf("success: send data!\n\n");
-		}
-
-        delay(DELAY_TIME);
+    if (to_addr.sin_addr.s_addr == (in_addr_t) -1) {
+        close(sock_fd);
+        fatal_message(__FILE__, __func__, __LINE__, "[FAIL] initiate proxy server's sockaddr_in", EXIT_FAILURE);
     }
 
-	close(fd);
-    return 0;
+    char buffer[BUFFER_SIZE] = {0};
+    strcpy(buffer, user_num);
+    buffer[4] = '\n';
+    buffer[5] = '\0';
+    printf("%s\n", buffer);
+
+    result = rudp_send(sock_fd, &to_addr, buffer, strlen(buffer), RUDP_SYN);
+    if (result != -0) {
+        close(sock_fd);
+        fatal_message(__FILE__, __func__, __LINE__, "[FAIL] sendto", EXIT_FAILURE);
+    }
+    lcd_write(7, 1, "... OK");
+
+    close(sock_fd);
+    return EXIT_SUCCESS;
 }
+
