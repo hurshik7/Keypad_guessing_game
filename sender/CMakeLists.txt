@@ -155,5 +155,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}")
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 
+# link against wiringPi
+find_library(WIRINGPI_LIBRARIES NAMES wiringPi)
+target_link_libraries(${PROJECT_NAME} ${WIRINGPI_LIBRARIES})
 
 add_dependencies(${PROJECT_NAME} doxygen)

@@ -9,7 +9,7 @@
 #include <unistd.h>
 
 #define DEFAULT_PORT (5050)
-#define BUFFER_SIZE (10)
+#define BUFFER_SIZE (100)
 
 int count = 0;
 int loc = 8;
@@ -28,11 +28,26 @@ void key_print_lcd(unsigned char *a) {
 }
 
 int main(int argc, char *argv[]) {
-    // store user input (4 digits)
+    if (wiringPiSetup() == -1) { //when initialize wiring failed,print message to screen
+        printf("setup wiringPi failed !");
+        return 1;
+    }
+
+	// init lcd, keypad
+	{
+		init_lcd();
+		keypadInit();
+	}
+    
+	// start ui here
+	lcd_write(0, 0, "Welcome to Guess");
+    lcd_write(0, 1, "Number: ");
+
+	// store user input (4 digits)
     unsigned char pressed_keys[BUTTON_NUM];
     unsigned char last_key_pressed[BUTTON_NUM];
 
-    while (1) {
+	while (1) {
         keyRead(pressed_keys);
         bool comp = keyCompare(pressed_keys, last_key_pressed);
         if (!comp) {
@@ -70,7 +85,7 @@ int main(int argc, char *argv[]) {
         fatal_message(__FILE__, __func__, __LINE__, "[FAIL] initiate proxy server's sockaddr_in", EXIT_FAILURE);
     }
 
-    char buffer[BUFFER_SIZE] = {0};
+    char buffer[BUFFER_SIZE] = {0, };
     strcpy(buffer, user_num);
     buffer[4] = '\n';
     buffer[5] = '\0';
