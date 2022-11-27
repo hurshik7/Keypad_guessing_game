@@ -164,11 +164,13 @@ int rudp_recv(int sock_fd, char *recv_data, struct sockaddr_in *from_addr) {
             return RDUP_RECV_FAILURE;
         }
 
-        // copy data from the client, print it on stdout
-        strncpy(buffer, packet_recv.data, packet_recv.data_length);
-        buffer[packet_recv.data_length] = '\0';
-        if (strlen(buffer) < MAX_DATA_LENGTH) {
-            strncpy(recv_data, buffer, strlen(buffer));
+        if (packet_recv.header.seq_no == current_seq_no) {
+            // copy data from the client, print it on stdout
+            strncpy(buffer, packet_recv.data, packet_recv.data_length);
+            buffer[packet_recv.data_length] = '\0';
+            if (strlen(buffer) < MAX_DATA_LENGTH) {
+                strncpy(recv_data, buffer, strlen(buffer));
+            }
         }
 
         // send ACK
