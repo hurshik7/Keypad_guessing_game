@@ -58,7 +58,7 @@ void deserialize_packet(rudp_packet_t *packet) {
 }
 
 // send rudp packet and recv ACK to the packet
-int rudp_send(int sock_fd, struct sockaddr_in *to_addr, const char *data, size_t data_size, uint16_t packet_type, char *ack_out) {
+int rudp_send(int sock_fd, struct sockaddr_in *to_addr, const char *data, size_t data_size, uint16_t packet_type) {
     static uint32_t current_seq = 0;
     ssize_t nwrote;
     ssize_t nread;
