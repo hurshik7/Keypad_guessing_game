@@ -10,8 +10,8 @@
 #include <unistd.h>
 
 #define BUFFER_SIZE (100)
+#define DEFAULT_LIFE (5)
 
-void key_print_lcd(unsigned char *pressed_key, int *count, char *user_num, int* loc);
 void get_user_num(char *user_num);
 
 int main(int argc, char *argv[]) {
@@ -59,37 +59,32 @@ int main(int argc, char *argv[]) {
 	// start ui here
 	lcd_write(0, 0, "Welcome to Guess");
 
-    char user_num[5] = {'\0'};
-	get_user_num(user_num);
+    int life = 5;
+    while (life > 0) {
+        char user_num[5] = {'\0'};
+        lcd_clear();
+        lcd_write(0, 0, "Your number is..");
+        get_user_num(user_num);
 
-    // for test, TODO delete this
-    char buffer[BUFFER_SIZE] = {0, };
-    strcpy(buffer, user_num);
-    buffer[4] = '\n';
-    buffer[5] = '\0';
-    printf("%s\n", buffer);
+        // for test, TODO delete this
+        char buffer[BUFFER_SIZE] = {0, };
+        strcpy(buffer, user_num);
+        buffer[4] = '\n';
+        buffer[5] = '\0';
+        printf("%s\n", buffer);
 
-    result = rudp_send(opts.sock_fd, &to_addr, buffer, strlen(buffer), RUDP_SYN);
-    if (result != -0) {
-        close(opts.sock_fd);
-        fatal_message(__FILE__, __func__, __LINE__, "[FAIL] rudp_send", EXIT_FAILURE);
+        result = rudp_send(opts.sock_fd, &to_addr, buffer, strlen(buffer), RUDP_SYN);
+        if (result != -0) {
+            close(opts.sock_fd);
+            fatal_message(__FILE__, __func__, __LINE__, "[FAIL] rudp_send", EXIT_FAILURE);
+        }
+        lcd_write(7, 1, "... OK");
+
+        life--;
     }
-    lcd_write(7, 1, "... OK");
 
     close(opts.sock_fd);
     return EXIT_SUCCESS;
-}
-
-void key_print_lcd(unsigned char *pressed_key, int *count, char *user_num, int* loc) {
-    char user_input[2] = { 0, };
-    user_input[0] = getKey(pressed_key);
-    user_input[1] = '\0';
-    if ('0' <= user_input[0] && user_input[0] <= '9') {
-        user_num[*count] = user_input[0];
-        lcd_write(*loc, 1, user_input);
-        *count += 1;
-        loc++;
-    }
 }
 
 void get_user_num(char *user_num) {
@@ -121,7 +116,5 @@ void get_user_num(char *user_num) {
     }
 
     // print user number on the lcd
-    lcd_clear();
-    lcd_write(0, 0, "Your number is..");
     lcd_write(2, 1, user_num);
 }
