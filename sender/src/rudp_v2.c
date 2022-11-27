@@ -164,13 +164,22 @@ int rudp_recv(int sock_fd, char *recv_data, struct sockaddr_in *from_addr) {
             return RDUP_RECV_FAILURE;
         }
 
-        if (packet_recv.header.seq_no == current_seq_no) {
-            // copy data from the client, print it on stdout
-            strncpy(buffer, packet_recv.data, packet_recv.data_length);
-            buffer[packet_recv.data_length] = '\0';
-            if (strlen(buffer) < MAX_DATA_LENGTH) {
-                strncpy(recv_data, buffer, strlen(buffer));
-            }
+        // if the sender sent the same packet with previous one, send ACK to client again for the same packet.
+        // this situation only happens when the client can not receive the ACK of the packet from the server
+        if (packet_recv.header.seq_no != current_seq_no) {
+            init_rudp_header(RUDP_ACK, packet_recv.header.seq_no, &response_packet_header);
+            response_packet = create_rudp_packet_malloc(&response_packet_header, 0, NULL);
+            sendto(sock_fd, response_packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) from_addr,
+                   sizeof(struct sockaddr_in));
+            free(response_packet);
+            return RDUP_RECV_FAILURE;
+        }
+
+        // copy data from the client, print it on stdout
+        strncpy(buffer, packet_recv.data, packet_recv.data_length);
+        buffer[packet_recv.data_length] = '\0';
+        if (strlen(buffer) < MAX_DATA_LENGTH) {
+            strncpy(recv_data, buffer, strlen(buffer));
         }
 
         // send ACK
