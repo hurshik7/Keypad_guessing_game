@@ -11,6 +11,8 @@
 
 #define BUFFER_SIZE (100)
 #define DEFAULT_LIFE (5)
+#define THREE_SECONDS (3000)
+#define MAX_LCD_LENGTH (16)
 
 void get_user_num(char *user_num);
 
@@ -56,14 +58,21 @@ int main(int argc, char *argv[]) {
         fatal_message(__FILE__, __func__, __LINE__, "[FAIL] initiate proxy server's sockaddr_in", EXIT_FAILURE);
     }
     
-	// start ui here
+	// start ui
 	lcd_write(0, 0, "Welcome to Guess");
+    lcd_write(1, 1, "Guess 0 to 9999");
+    delay(THREE_SECONDS);
+    lcd_clear();
 
-    int life = 5;
+    int life = DEFAULT_LIFE;
     while (life > 0) {
         char user_num[5] = {'\0'};
         lcd_clear();
-        lcd_write(0, 0, "Your number is..");
+
+        char msg[MAX_LCD_LENGTH] = { 0 };
+        sprintf(msg, "Life: %d, LOW", life);
+        lcd_write(0, 0, msg);
+        lcd_write(0, 1, "number:");
         get_user_num(user_num);
 
         // for test, TODO delete this
@@ -78,13 +87,15 @@ int main(int argc, char *argv[]) {
             close(opts.sock_fd);
             fatal_message(__FILE__, __func__, __LINE__, "[FAIL] rudp_send", EXIT_FAILURE);
         }
-        lcd_write(7, 1, "... OK");
 
         life--;
     }
 
     char buffer[BUFFER_SIZE] = { 0, };
     result = rudp_send(opts.sock_fd, &to_addr, buffer, BUFFER_SIZE, RUDP_FIN);
+    lcd_clear();
+    lcd_write(0, 0, "Finish!");
+    lcd_write(1, 1, "Good job!");
     close(opts.sock_fd);
     return EXIT_SUCCESS;
 }
@@ -94,7 +105,7 @@ void get_user_num(char *user_num) {
     unsigned char pressed_keys[BUTTON_NUM];
     unsigned char last_key_pressed[BUTTON_NUM];
     int count = 0;
-    int loc = 8;
+    int loc = 9;
     char user_input[2];
 
     lcd_write(0, 1, "Number: ");
@@ -116,7 +127,4 @@ void get_user_num(char *user_num) {
             break;
         }
     }
-
-    // print user number on the lcd
-    lcd_write(2, 1, user_num);
 }
