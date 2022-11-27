@@ -11,6 +11,7 @@
 
 #define BUFFER_SIZE (100)
 #define DEFAULT_LIFE (5)
+#define FIVE_SECONDS (5000)
 #define THREE_SECONDS (3000)
 #define MAX_LCD_LENGTH (16)
 
@@ -58,10 +59,22 @@ int main(int argc, char *argv[]) {
         fatal_message(__FILE__, __func__, __LINE__, "[FAIL] initiate proxy server's sockaddr_in", EXIT_FAILURE);
     }
     
-	// start ui
+	// start ui, connect server
 	lcd_write(0, 0, "Welcome to Guess");
-    lcd_write(1, 1, "Guess 0 to 9999");
+    lcd_write(0, 1, "Wait server...");
+    char buffer[BUFFER_SIZE] = {0, };
+    result = rudp_send(opts.sock_fd, &to_addr, buffer, BUFFER_SIZE, RUDP_SYN);
+    if (result != -0) {
+        close(opts.sock_fd);
+        fatal_message(__FILE__, __func__, __LINE__, "[FAIL] rudp_send", EXIT_FAILURE);
+    }
+    lcd_write(0, 14, "OK");
     delay(THREE_SECONDS);
+
+    lcd_clear();
+    lcd_write(0, 0, "Welcome to Guess");
+    lcd_write(1, 1, "Guess 0 to 9999");
+    delay(FIVE_SECONDS);
     lcd_clear();
 
     int life = DEFAULT_LIFE;
@@ -76,7 +89,6 @@ int main(int argc, char *argv[]) {
         get_user_num(user_num);
 
         // for test, TODO delete this
-        char buffer[BUFFER_SIZE] = {0, };
         strcpy(buffer, user_num);
         buffer[4] = '\n';
         buffer[5] = '\0';
