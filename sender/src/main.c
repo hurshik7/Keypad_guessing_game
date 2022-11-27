@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
         get_user_num(user_num);
 
         // for test, TODO delete this
-        memcpy(buffer, 0, BUFFER_SIZE);
+        memset(buffer, 0, BUFFER_SIZE);
         strcpy(buffer, user_num);
         buffer[4] = '\0';
         printf("%s\n", buffer);
@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
             fatal_message(__FILE__, __func__, __LINE__, "[FAIL] rudp_send", EXIT_FAILURE);
         }
 
-        delay(500);
+        fsync(opts.sock_fd);
         char data_from_server[BUFFER_SIZE];
         rudp_recv(opts.sock_fd, data_from_server, &from_addr);
         printf("%s\n", data_from_server);
