@@ -61,11 +61,12 @@ int main(int argc, char *argv[]) {
     }
     
 	// start ui, connect server
+    char ack[BUFFER_SIZE];
 	lcd_write(0, 0, "Welcome to Guess");
     lcd_write(0, 1, "Wait server...");
     char buffer[BUFFER_SIZE] = {0, };
     strcpy(buffer, "CONNECT");
-    result = rudp_send(opts.sock_fd, &to_addr, buffer, strlen(buffer), RUDP_SYN);
+    result = rudp_send(opts.sock_fd, &to_addr, buffer, strlen(buffer), RUDP_SYN, ack);
     if (result != -0) {
         close(opts.sock_fd);
         fatal_message(__FILE__, __func__, __LINE__, "[FAIL] rudp_send", EXIT_FAILURE);
@@ -76,7 +77,7 @@ int main(int argc, char *argv[]) {
     lcd_clear();
     lcd_write(0, 0, "Welcome to Guess");
     lcd_write(1, 1, "Guess 0 to 9999");
-    delay(FIVE_SECONDS);
+    delay(THREE_SECONDS);
     lcd_clear();
 
     int life = DEFAULT_LIFE;
@@ -95,7 +96,7 @@ int main(int argc, char *argv[]) {
         buffer[4] = '\0';
         printf("%s\n", buffer);
 
-        result = rudp_send(opts.sock_fd, &to_addr, buffer, strlen(buffer), RUDP_SYN);
+        result = rudp_send(opts.sock_fd, &to_addr, buffer, strlen(buffer), RUDP_SYN, ack);
         if (result != 0) {
             close(opts.sock_fd);
             fatal_message(__FILE__, __func__, __LINE__, "[FAIL] rudp_send", EXIT_FAILURE);
@@ -108,7 +109,7 @@ int main(int argc, char *argv[]) {
         life--;
     }
 
-    result = rudp_send(opts.sock_fd, &to_addr, buffer, BUFFER_SIZE, RUDP_FIN);
+    result = rudp_send(opts.sock_fd, &to_addr, buffer, BUFFER_SIZE, RUDP_FIN, ack);
     lcd_clear();
     lcd_write(0, 0, "Finish!");
     lcd_write(1, 1, "Good job!");

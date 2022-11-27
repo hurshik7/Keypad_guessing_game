@@ -58,7 +58,7 @@ void deserialize_packet(rudp_packet_t *packet) {
 }
 
 // send rudp packet and recv ACK to the packet
-int rudp_send(int sock_fd, struct sockaddr_in *to_addr, const char *data, size_t data_size, uint16_t packet_type) {
+int rudp_send(int sock_fd, struct sockaddr_in *to_addr, const char *data, size_t data_size, uint16_t packet_type, char *ack_out) {
     static uint32_t current_seq = 0;
     ssize_t nwrote;
     ssize_t nread;
@@ -87,7 +87,7 @@ int rudp_send(int sock_fd, struct sockaddr_in *to_addr, const char *data, size_t
         return RUDP_SEND_FAILURE;
     }
 
-    wait_response_packet:
+wait_response_packet:
     nread = recvfrom(sock_fd, &response_packet, sizeof(rudp_packet_t), 0, (struct sockaddr *) &from_addr,
                      &from_addr_len);
     if (nread == -1) {
@@ -108,6 +108,7 @@ int rudp_send(int sock_fd, struct sockaddr_in *to_addr, const char *data, size_t
     if (response_packet.header.packet_type == RUDP_NAK ||
         (response_packet.header.seq_no != current_seq || response_packet.header.packet_type != RUDP_ACK) ||
         from_addr.sin_addr.s_addr != to_addr->sin_addr.s_addr) {
+        printf("Herehere\n");
         nwrote = sendto(sock_fd, packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) to_addr,
                         sizeof(struct sockaddr_in));
         if (nwrote == -1) {
