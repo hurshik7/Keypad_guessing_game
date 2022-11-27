@@ -44,10 +44,12 @@ int main(int argc, char *argv[]) {
         fatal_message(__FILE__, __func__, __LINE__, "[FAIL] open a socket", EXIT_FAILURE);
     }
 
+	printf("%s\n", opts.ip_out);
+
     // init server addr
     struct sockaddr_in to_addr;
     to_addr.sin_family = AF_INET;
-    to_addr.sin_port = opts.port_out;
+    to_addr.sin_port = htons(opts.port_out);
     to_addr.sin_addr.s_addr = inet_addr(opts.ip_out);
     if (to_addr.sin_addr.s_addr == (in_addr_t) -1) {
         close(opts.sock_fd);
