@@ -72,14 +72,14 @@ int rudp_send(int sock_fd, struct sockaddr_in *to_addr, const char *data, size_t
     // set timeout
     setsockopt(sock_fd, SOL_SOCKET, SO_RCVTIMEO, (const char *) &tv, sizeof(tv));
 
-    // create rudp fin packet header
+    // create rudp packet header
     rudp_header_t header;
     init_rudp_header(packet_type, current_seq, &header);
 
-    // create rudp fin packet
+    // create rudp packet
     rudp_packet_t *packet = create_rudp_packet_malloc(&header, data_size, data);
 
-    // sendto proxy server
+    // sendto server
     nwrote = sendto(sock_fd, packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) to_addr,
                     sizeof(struct sockaddr_in));
     if (nwrote == -1) {
