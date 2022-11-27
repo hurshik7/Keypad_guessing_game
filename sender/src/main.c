@@ -92,7 +92,6 @@ int main(int argc, char *argv[]) {
 
         // for test, TODO delete this
         strcpy(buffer, user_num);
-        buffer[4] = '\n';
         buffer[5] = '\0';
         printf("%s\n", buffer);
 
