@@ -102,6 +102,7 @@ int main(int argc, char *argv[]) {
             fatal_message(__FILE__, __func__, __LINE__, "[FAIL] rudp_send", EXIT_FAILURE);
         }
 
+        delay(500);
         char data_from_server[BUFFER_SIZE];
         rudp_recv(opts.sock_fd, data_from_server, &from_addr);
         printf("%s\n", data_from_server);
