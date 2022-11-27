@@ -83,6 +83,8 @@ int main(int argc, char *argv[]) {
         life--;
     }
 
+    char buffer[BUFFER_SIZE] = { 0, };
+    result = rudp_send(opts.sock_fd, &to_addr, buffer, BUFFER_SIZE, RUDP_FIN);
     close(opts.sock_fd);
     return EXIT_SUCCESS;
 }
