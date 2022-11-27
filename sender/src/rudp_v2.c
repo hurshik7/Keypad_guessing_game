@@ -125,10 +125,9 @@ int rudp_send(int sock_fd, struct sockaddr_in *to_addr, const char *data, size_t
 }
 
 // recv rudp packet and send response packet
-int rudp_recv(int sock_fd, char *recv_data) {
+int rudp_recv(int sock_fd, char *recv_data, struct sockaddr_in *from_addr) {
     rudp_packet_t packet_recv;
     static long current_seq_no = -1;
-    struct sockaddr_in from_addr;
     socklen_t from_addr_len = sizeof(struct sockaddr_in);
     ssize_t nread;
 
