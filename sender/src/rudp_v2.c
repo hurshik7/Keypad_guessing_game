@@ -108,7 +108,6 @@ wait_response_packet:
     if (response_packet.header.packet_type == RUDP_NAK ||
         (response_packet.header.seq_no != current_seq || response_packet.header.packet_type != RUDP_ACK) ||
         from_addr.sin_addr.s_addr != to_addr->sin_addr.s_addr) {
-        printf("Herehere\n");
         nwrote = sendto(sock_fd, packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) to_addr,
                         sizeof(struct sockaddr_in));
         if (nwrote == -1) {
