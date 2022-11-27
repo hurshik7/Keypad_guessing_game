@@ -92,6 +92,7 @@ int main(int argc, char *argv[]) {
         get_user_num(user_num);
 
         // for test, TODO delete this
+        memcpy(buffer, 0, BUFFER_SIZE);
         strcpy(buffer, user_num);
         buffer[4] = '\0';
         printf("%s\n", buffer);
