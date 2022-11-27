@@ -14,6 +14,7 @@
 #define RUDP_ACK (1)
 #define RUDP_FIN (2)
 #define RUDP_NAK (3)
+#define RUDP_INIT (4)
 #define RUDP_SEND_SUCCESS (0)
 #define RUDP_SEND_FAILURE (1)
 #define RDUP_RECV_SUCCESS (0)

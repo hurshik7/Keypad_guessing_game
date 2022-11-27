@@ -66,6 +66,11 @@ int rudp_send(int sock_fd, struct sockaddr_in *to_addr, const char *data, size_t
     struct sockaddr_in from_addr;
     socklen_t from_addr_len = sizeof(struct sockaddr_in);
 
+    if (packet_type == RUDP_INIT) {
+        current_seq = 0;
+        return RUDP_SEND_SUCCESS;
+    }
+
     struct timeval tv;
     tv.tv_sec = TIMEOUT_IN_SECOND;
     tv.tv_usec = 0;
