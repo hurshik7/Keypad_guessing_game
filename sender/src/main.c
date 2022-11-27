@@ -103,6 +103,7 @@ int main(int argc, char *argv[]) {
         }
 
         char data_from_server[BUFFER_SIZE];
+        memset(data_from_server, '\0', BUFFER_SIZE);
         rudp_recv(opts.sock_fd, data_from_server, &from_addr);
         printf("%s\n", data_from_server);
 
