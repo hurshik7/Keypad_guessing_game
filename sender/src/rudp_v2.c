@@ -133,7 +133,7 @@ int rudp_recv(int sock_fd, char *recv_data, struct sockaddr_in *from_addr) {
 
     char buffer[MAX_DATA_LENGTH];
 
-    nread = recvfrom(sock_fd, &packet_recv, sizeof(rudp_packet_t), 0, (struct sockaddr *) &from_addr, &from_addr_len);
+    nread = recvfrom(sock_fd, &packet_recv, sizeof(rudp_packet_t), 0, (struct sockaddr *) from_addr, &from_addr_len);
     if (nread == -1) {
         return RDUP_RECV_FAILURE;
     }
@@ -153,7 +153,7 @@ int rudp_recv(int sock_fd, char *recv_data, struct sockaddr_in *from_addr) {
         if (check_sum_of_data_in_pack != packet_recv.check_sum) {
             init_rudp_header(RUDP_NAK, packet_recv.header.seq_no, &response_packet_header);
             response_packet = create_rudp_packet_malloc(&response_packet_header, 0, NULL);
-            sendto(sock_fd, response_packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) &from_addr,
+            sendto(sock_fd, response_packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) from_addr,
                    sizeof(struct sockaddr_in));
             free(response_packet);
             return RDUP_RECV_FAILURE;
@@ -174,7 +174,7 @@ int rudp_recv(int sock_fd, char *recv_data, struct sockaddr_in *from_addr) {
         // send ACK
         init_rudp_header(RUDP_ACK, packet_recv.header.seq_no, &response_packet_header);
         response_packet = create_rudp_packet_malloc(&response_packet_header, 0, NULL);
-        sendto(sock_fd, response_packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) &from_addr,
+        sendto(sock_fd, response_packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) from_addr,
                sizeof(struct sockaddr_in));
 
         // free response packet_recv and increase current_seq_no
@@ -184,7 +184,7 @@ int rudp_recv(int sock_fd, char *recv_data, struct sockaddr_in *from_addr) {
         // send ACT to FIN
         init_rudp_header(RUDP_ACK, packet_recv.header.seq_no, &response_packet_header);
         response_packet = create_rudp_packet_malloc(&response_packet_header, 0, NULL);
-        sendto(sock_fd, response_packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) &from_addr,
+        sendto(sock_fd, response_packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) from_addr,
                sizeof(struct sockaddr_in));
         current_seq_no = -1;
     } else {
