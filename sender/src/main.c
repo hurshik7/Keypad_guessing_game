@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
         buffer[4] = '\0';
         printf("%s\n", buffer);
 
-        result = rudp_send(opts.sock_fd, &to_addr, buffer, strlen(buffer), RUDP_SYN);
+        result = rudp_send(opts.sock_fd, &to_addr, buffer, BUFFER_SIZE, RUDP_SYN);
         if (result != 0) {
             close(opts.sock_fd);
             fatal_message(__FILE__, __func__, __LINE__, "[FAIL] rudp_send", EXIT_FAILURE);
