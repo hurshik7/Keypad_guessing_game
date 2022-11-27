@@ -103,7 +103,6 @@ int main(int argc, char *argv[]) {
         life--;
     }
 
-    char buffer[BUFFER_SIZE] = { 0, };
     result = rudp_send(opts.sock_fd, &to_addr, buffer, BUFFER_SIZE, RUDP_FIN);
     lcd_clear();
     lcd_write(0, 0, "Finish!");
