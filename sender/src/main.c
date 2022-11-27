@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
 
         // for test, TODO delete this
         strcpy(buffer, user_num);
-        buffer[5] = '\0';
+        buffer[4] = '\0';
         printf("%s\n", buffer);
 
         result = rudp_send(opts.sock_fd, &to_addr, buffer, strlen(buffer), RUDP_SYN);
