@@ -46,11 +46,6 @@ int main(int argc, char *argv[]) {
     if (opts.sock_fd == -1) {
         fatal_message(__FILE__, __func__, __LINE__, "[FAIL] open a socket", EXIT_FAILURE);
     }
-    struct timeval tv;
-    tv.tv_sec = TIMEOUT_IN_SECOND;
-    tv.tv_usec = 0;
-    // set timeout
-    setsockopt(opts.sock_fd, SOL_SOCKET, SO_RCVTIMEO, (const char *) &tv, sizeof(tv));
 
 	printf("%s\n", opts.ip_out);
 
@@ -112,7 +107,6 @@ int main(int argc, char *argv[]) {
         rudp_recv(opts.sock_fd, data_from_server, &from_addr);
         printf("%s\n", data_from_server);
 
-        fsync(opts.sock_fd);
         life--;
     }
 

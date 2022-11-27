@@ -66,6 +66,12 @@ int rudp_send(int sock_fd, struct sockaddr_in *to_addr, const char *data, size_t
     struct sockaddr_in from_addr;
     socklen_t from_addr_len = sizeof(struct sockaddr_in);
 
+    struct timeval tv;
+    tv.tv_sec = TIMEOUT_IN_SECOND;
+    tv.tv_usec = 0;
+    // set timeout
+    setsockopt(sock_fd, SOL_SOCKET, SO_RCVTIMEO, (const char *) &tv, sizeof(tv));
+
     // create rudp packet header
     rudp_header_t header;
     init_rudp_header(packet_type, current_seq, &header);
@@ -116,6 +122,11 @@ wait_response_packet:
     // increase sequence number and free the allocated packet.
     free(packet);
     current_seq++;
+
+    tv.tv_sec = 0;
+    tv.tv_usec = 0;
+    // set timeout
+    setsockopt(sock_fd, SOL_SOCKET, SO_RCVTIMEO, (const char *) &tv, sizeof(tv));
     return RUDP_SEND_SUCCESS;
 }
 
