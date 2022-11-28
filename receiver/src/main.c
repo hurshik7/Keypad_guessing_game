@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {          // NOLINT(readability-function-cogni
 
     lcd_clear();
     lcd_write(0, 0, "Waiting");
-    lcd_write(7, 1, "a client");
+    lcd_write(7, 1, "a client");                        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     while (1) {
         char data[MAX_DATA_LENGTH];
         char response_data[MAX_DATA_LENGTH];
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {          // NOLINT(readability-function-cogni
 
             lcd_clear();
             lcd_write(0, 0, "Game start!");
-            lcd_write(0, 1, "waiting user num");
+            lcd_write(0, 1, "waiting a number");
             continue;
         }
         if (result == RUDP_FIN) {
@@ -149,9 +149,9 @@ void print_status_lcd(const char *status, int user_num) {
     sprintf(first_line, "%s%s", "Status: ", status);
     sprintf(second_line, "%s%d", "Number: ", user_num);
     if (strcmp("CORRECT", status) == 0) {
-        ledColorSet(0x00,0xff,0x00);
+        ledColorSet(0x00,0xff,0x00);                    // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     } else {
-        ledColorSet(0xff,0x00,0x00);
+        ledColorSet(0xff,0x00,0x00);                    // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     }
     lcd_write(0, 0, first_line);
     lcd_write(0, 1, second_line);
