@@ -2,7 +2,7 @@
 #include "keypad.h"
 #include "lcd.h"
 #include "option_handler.h"
-#include "rudp_v2.h"
+#include "rudp_v3.h"
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,9 +13,26 @@
 #define THREE_SECONDS (3000)
 #define HIGH_LOW_BUF_SIZE (10)
 
+/**
+ * Get 4 digits number from an user using a keypad.
+ * @param user_num a string will store the number from the user
+ */
 void get_user_num(char *user_num);
+
+/**
+ * Extract a status and life info from a data from the server.
+ * @param data_from_server a string represents a data from the server
+ * @param high_low a string will contains the status
+ * @param life a pointer to integer which will store the life information
+ */
 void extract_data(char *data_from_server, char *high_low, int *life);
 
+/**
+ * Drive guessing_client.
+ * @param argc an integer represents the number of the command line arguments
+ * @param argv an array of strings contains the command line arguments
+ * @return an integer
+ */
 int main(int argc, char *argv[]) {
     int result;
     struct options opts;
@@ -167,3 +184,4 @@ void extract_data(char *data_from_server, char *high_low, int *life) {
     char *ptr;
     *life = (int) strtol(tok, &ptr, 10);        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 }
+

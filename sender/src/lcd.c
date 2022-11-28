@@ -98,3 +98,4 @@ void lcd_write(int x, int y, const char data[]) {
         send_data(data[i]);
     }
 }
+
