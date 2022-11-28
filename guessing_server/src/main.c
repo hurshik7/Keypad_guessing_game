@@ -122,10 +122,10 @@ int main(int argc, char *argv[]) {          // NOLINT(readability-function-cogni
             print_status_lcd("HIGH", client_num);
         } else if (client_num < random_num) {
             sprintf(response_data, "LOW/%d", --life);
-            print_status_lcd("HIGH", client_num);
+            print_status_lcd("LOW", client_num);
         } else {
             sprintf(response_data, "CORRECT/%d", life);
-            print_status_lcd("HIGH", client_num);
+            print_status_lcd("CORRECT", client_num);
         }
         printf("%s\n", response_data);
 
@@ -149,7 +149,7 @@ void print_status_lcd(const char *status, int user_num) {
     memset(second_line, 0, BUF_LENGTH);
     sprintf(first_line, "%s%s", "Status: ", status);
     sprintf(second_line, "%s%d", "Number: ", user_num);
-    if (strcmp("CORRECT", status) == 0) {
+    if (status[0] == 'C') {                             // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         ledColorSet(0x00,0xff,0x00);                    // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     } else {
         ledColorSet(0xff,0x00,0x00);                    // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
