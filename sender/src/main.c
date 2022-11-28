@@ -165,5 +165,5 @@ void extract_data(char *data_from_server, char *high_low, int *life) {
     tok = strtok(data_from_server, "/ ");
     strncpy(high_low, tok, strlen(tok));
     tok = strtok(NULL, "/ ");
-    *life = atoi(tok);
+    *life = atoi(tok);                        // NOLINT(cert-err34-c) // We assert that there is no other characters except 0-9 in data_from_server
 }

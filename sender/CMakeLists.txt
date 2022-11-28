@@ -137,6 +137,7 @@ set(CLANG_TIDY_CHECKS "${CLANG_TIDY_CHECKS},-llvmlibc-restrict-system-libc-heade
 set(CLANG_TIDY_CHECKS "${CLANG_TIDY_CHECKS},-misc-static-assert")
 set(CLANG_TIDY_CHECKS "${CLANG_TIDY_CHECKS},-misc-unused-parameters")
 set(CLANG_TIDY_CHECKS "${CLANG_TIDY_CHECKS},-readability-identifier-length")
+set(CLANG_TIDY_CHECKS "${CLANG_TIDY_CHECKS},-Wformat-overflow=")
 set(CMAKE_C_CLANG_TIDY clang-tidy -checks=${CLANG_TIDY_CHECKS};--quiet)
 
 add_executable(${PROJECT_NAME} ${SOURCE_LIST} ${HEADER_LIST})
