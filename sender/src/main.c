@@ -160,9 +160,10 @@ void get_user_num(char *user_num) {
 
 void extract_data(char *data_from_server, char *high_low, int *life) {
     memset(high_low, 0, HIGH_LOW_BUF_SIZE);
-    char* tok;
+    char *tok;
     tok = strtok(data_from_server, "/ ");
     strncpy(high_low, tok, strlen(tok));
     tok = strtok(NULL, "/ ");
-    *life = atoi(tok);                        // NOLINT(cert-err34-c) // We assert that there is no other characters except 0-9 in data_from_server
+    char *ptr;
+    *life = (int) strtol(tok, &ptr, 10);        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 }
