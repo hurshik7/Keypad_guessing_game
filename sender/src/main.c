@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
         close(opts.sock_fd);
         fatal_message(__FILE__, __func__, __LINE__, "[FAIL] rudp_send", EXIT_FAILURE);
     }
-    lcd_write(14, 1, "OK");
+    lcd_write(14, 1, "OK");                                 // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     rudp_recv(opts.sock_fd, data_from_server, &from_addr);
     extract_data(data_from_server, high_low, &life);
     delay(THREE_SECONDS);
@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
     lcd_clear();
 
     while (life > 0) {
-        char user_num[5] = {'\0'};
+        char user_num[5] = {'\0'};                          // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         lcd_clear();
 
         char msg[MAX_LCD_LENGTH] = { 0 };
@@ -135,7 +135,7 @@ void get_user_num(char *user_num) {
     unsigned char pressed_keys[BUTTON_NUM];
     unsigned char last_key_pressed[BUTTON_NUM];
     int count = 0;
-    int loc = 9;
+    int loc = 9;                                // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     char user_input[2];
 
     lcd_write(0, 1, "Number: ");
@@ -152,7 +152,7 @@ void get_user_num(char *user_num) {
             }
             keyCopy(last_key_pressed, pressed_keys);
         }
-        delay(100);
+        delay(100);                             // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         if (count == 4) {
             break;
         }

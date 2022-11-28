@@ -69,7 +69,7 @@ void lcd_clear() {
     send_command(0x01);     //clear Screen
 }
 
-void lcd_write(int x, int y, char data[]) {
+void lcd_write(int x, int y, const char data[]) {
     int addr, i;
     int tmp;
     if (x < 0)  x = 0;
