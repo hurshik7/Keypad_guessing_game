@@ -137,7 +137,7 @@ wait_response_packet:
 // recv rudp packet and send response packet
 int rudp_recv(int sock_fd, char *recv_data, struct sockaddr_in *from_addr) {
     rudp_packet_t packet_recv;
-    static uint32_t current_seq_no = -1;
+    static long current_seq_no = -1;
     socklen_t from_addr_len = sizeof(struct sockaddr_in);
     ssize_t nread;
 
@@ -170,7 +170,7 @@ int rudp_recv(int sock_fd, char *recv_data, struct sockaddr_in *from_addr) {
         }
 
         // if the seq_no is different from the current seq_no, just ignore the packet
-        if (packet_recv.header.seq_no != current_seq_no) {
+        if ((long) packet_recv.header.seq_no != current_seq_no) {
             return RDUP_RECV_FAILURE;
         }
 
