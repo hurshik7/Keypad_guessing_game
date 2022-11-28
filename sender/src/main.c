@@ -10,12 +10,13 @@
 #include <unistd.h>
 
 #define BUFFER_SIZE (128)
-#define DEFAULT_LIFE (5)
-#define FIVE_SECONDS (5000)
+#define DEFAULT_LIFE (10)
 #define THREE_SECONDS (3000)
 #define MAX_LCD_LENGTH (16)
+#define HIGH_LOW_BUF_SZE (10)
 
 void get_user_num(char *user_num);
+void extract_data(char *data_from_server, char *high_low, int *life);
 
 int main(int argc, char *argv[]) {
     int result;
@@ -46,8 +47,6 @@ int main(int argc, char *argv[]) {
     if (opts.sock_fd == -1) {
         fatal_message(__FILE__, __func__, __LINE__, "[FAIL] open a socket", EXIT_FAILURE);
     }
-
-	printf("%s\n", opts.ip_out);
 
     // init server addr
     struct sockaddr_in to_addr;
@@ -80,12 +79,13 @@ int main(int argc, char *argv[]) {
     lcd_clear();
 
     int life = DEFAULT_LIFE;
+    char high_low[HIGH_LOW_BUF_SZE] = { 0 };
     while (life > 0) {
         char user_num[5] = {'\0'};
         lcd_clear();
 
         char msg[MAX_LCD_LENGTH] = { 0 };
-        sprintf(msg, "Life: %d, LOW", life);
+        sprintf(msg, "Life: %d, %s", life, high_low);
         lcd_write(0, 0, msg);
         lcd_write(0, 1, "number:");
         get_user_num(user_num);
@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {
         rudp_recv(opts.sock_fd, data_from_server, &from_addr);
         printf("%s\n", data_from_server);
 
-        life--;
+        extract_data(data_from_server, high_low, &life);
     }
 
     memset(buffer, '\0', BUFFER_SIZE);
@@ -148,4 +148,13 @@ void get_user_num(char *user_num) {
             break;
         }
     }
+}
+
+void extract_data(char *data_from_server, char *high_low, int *life) {
+    memset(high_low, 0, HIGH_LOW_BUF_SZE);
+    char* tok;
+    tok = strtok(data_from_server, "/ ");
+    strncpy(high_low, tok, strlen(tok));
+    tok = strtok(NULL, "/ ");
+    *life = atoi(tok);
 }
