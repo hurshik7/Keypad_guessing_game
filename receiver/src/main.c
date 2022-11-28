@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {          // NOLINT(readability-function-cogni
 
             lcd_clear();
             lcd_write(0, 0, "Game start!");
-            lcd_write(1, 1, "waiting user num");
+            lcd_write(0, 1, "waiting user num");
             continue;
         }
         if (result == RUDP_FIN) {
@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {          // NOLINT(readability-function-cogni
             rudp_send(opts.sock_fd, &from_addr, response_data, strlen(response_data), RUDP_INIT);
             lcd_clear();
             lcd_write(0, 0, "Game finish");
-            lcd_write(1, 1, "Waiting a client");
+            lcd_write(0, 1, "Waiting a client");
             continue;
         }
 
