@@ -1,7 +1,3 @@
-//
-// Created by Shik Hur on 2022-11-28.
-//
-
 #ifndef GUESSING_SERVER_LED_H
 #define GUESSING_SERVER_LED_H
 
@@ -10,9 +6,9 @@
 #include <stdio.h>
 
 #define uchar unsigned char
-#define LedPinRed    28
-#define LedPinGreen  29
-#define LedPinBlue   23
+#define LedPinRed    26
+#define LedPinGreen  27
+#define LedPinBlue   21
 
 void ledInit(void);
 

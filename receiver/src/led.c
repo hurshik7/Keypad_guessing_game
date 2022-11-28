@@ -1,6 +1,3 @@
-//
-// Created by Shik Hur on 2022-11-28.
-//
 
 #include "led.h"
 
