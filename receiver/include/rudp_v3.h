@@ -2,8 +2,8 @@
 // Created by Shik Hur on 2022-10-28.
 //
 
-#ifndef RUDP_V2_H
-#define RUDP_V2_H
+#ifndef RUDP_V3_H
+#define RUDP_V3_H
 
 
 #include <arpa/inet.h>
@@ -74,8 +74,25 @@ void init_rudp_header(uint16_t type, uint32_t seq_no, rudp_header_t *header_out)
  */
 void deserialize_packet(rudp_packet_t *packet);
 
+/**
+ * Send a rudp packet.
+ * @param sock_fd an integer represents a file descriptor for a socket
+ * @param to_addr sockaddr_in struct represents a destination address
+ * @param data a string represents data
+ * @param data_size an unsigned integer represents the size of the data
+ * @param packet_type uint16_t integer represent the type of the rudp packet
+ * @return an integer represents success or failure
+ */
 int rudp_send(int sock_fd, struct sockaddr_in *to_addr, const char* data, size_t data_size, uint16_t packet_type);
+
+/**
+ * Receive a rudp packet.
+ * @param sock_fd an integer represents a file descriptor for a socket
+ * @param recv_data a char pointer represents the received data
+ * @param from_addr sockaddr_in represents an address of source host
+ * @return an integer represents success or failure
+ */
 int rudp_recv(int sock_fd, char *recv_data, struct sockaddr_in *from_addr);
 
-#endif //RUDP_V2_H
+#endif //RUDP_V3_H
 
