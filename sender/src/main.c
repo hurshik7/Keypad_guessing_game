@@ -86,9 +86,8 @@ int main(int argc, char *argv[]) {
         char user_num[5] = {'\0'};                          // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         lcd_clear();
 
-        char msg[MAX_LCD_LENGTH] = { 0 };
-        sprintf(buffer, "Life: %d, %s", life, high_low);
-        strncpy(msg, buffer, MAX_DATA_LENGTH);              // NOLINT(clang-diagnostic-fortify-source)
+        char msg[BUFFER_SIZE] = { 0 };
+        sprintf(msg, "Life: %d, %s", life, high_low);
         lcd_write(0, 0, msg);
         lcd_write(0, 1, "number:");
         get_user_num(user_num);
