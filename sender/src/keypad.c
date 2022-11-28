@@ -7,8 +7,8 @@ static const unsigned char KEYS[BUTTON_NUM] = {
 	'*','0','#','D'
 };
 
-static unsigned char rowPins[ROWS] = {1, 4, 5, 6};
-static unsigned char colPins[COLS] = {12, 3, 2, 0};
+static const unsigned char rowPins[ROWS] = {1, 4, 5, 6};
+static const unsigned char colPins[COLS] = {12, 3, 2, 0};
 
 void keypadInit(void) {
     for (int i = 0; i < 4; i++) {

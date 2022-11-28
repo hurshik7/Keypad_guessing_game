@@ -4,7 +4,7 @@
 
 static int fd;                              // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 static int BLEN = 1;                        // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
-static int LCDAddr = 0x27;                  // NOLINT(cppcoreguidelines-avoid-non-const-global-variables, readability-magic-numbers, cppcoreguidelines-avoid-magic-numbers)
+static const int LCDAddr = 0x27;             // NOLINT(cppcoreguidelines-avoid-non-const-global-variables, readability-magic-numbers, cppcoreguidelines-avoid-magic-numbers)
 
 void write_word(int data){
     int temp = data;
