@@ -11,7 +11,7 @@
 
 #define BUFFER_SIZE (128)
 #define THREE_SECONDS (3000)
-#define HIGH_LOW_BUF_SZE (10)
+#define HIGH_LOW_BUF_SIZE (10)
 
 void get_user_num(char *user_num);
 void extract_data(char *data_from_server, char *high_low, int *life);
@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
     lcd_write(0, 1, "Wait server...");
     char buffer[BUFFER_SIZE] = {0, };
     char data_from_server[BUFFER_SIZE];
-    char high_low[HIGH_LOW_BUF_SZE] = { 0 };
+    char high_low[HIGH_LOW_BUF_SIZE] = {0 };
     strcpy(buffer, "CONNECT");
     result = rudp_send(opts.sock_fd, &to_addr, buffer, strlen(buffer), RUDP_SYN);
     if (result != -0) {
@@ -159,7 +159,7 @@ void get_user_num(char *user_num) {
 }
 
 void extract_data(char *data_from_server, char *high_low, int *life) {
-    memset(high_low, 0, HIGH_LOW_BUF_SZE);
+    memset(high_low, 0, HIGH_LOW_BUF_SIZE);
     char* tok;
     tok = strtok(data_from_server, "/ ");
     strncpy(high_low, tok, strlen(tok));
