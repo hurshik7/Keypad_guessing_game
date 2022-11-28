@@ -52,7 +52,7 @@ void send_data(int data){
     write_word(buf);
 }
 
-void init_lcd() {
+void init_lcd(void) {
 	fd = wiringPiI2CSetup(LCDAddr);
     send_command(0x33);     // Must initialize to 8-line mode at first
     delay(5);
@@ -66,7 +66,7 @@ void init_lcd() {
     wiringPiI2CWrite(fd, 0x08);
 }
 
-void lcd_clear() {
+void lcd_clear(void) {
     send_command(0x01);     //clear Screen
 }
 
