@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
         lcd_write(1, 1, "You Win!");
     } else {
         lcd_write(0, 0, "Oh no, Try Again");
-        lcd_write(1, 1, "You Lost");
+        lcd_write(1, 1, "You Lost...");
     }
     close(opts.sock_fd);
     return EXIT_SUCCESS;
