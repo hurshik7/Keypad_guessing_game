@@ -1,15 +1,16 @@
 #include "lcd.h"
 
-static int fd;
-static int BLEN = 1;
-static int LCDAddr = 0x27;
+static int fd;                              // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+static int BLEN = 1;                        // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+static int LCDAddr = 0x27;                  // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,readability-magic-numbers)
 
 void write_word(int data){
     int temp = data;
-    if ( BLEN == 1 )
+    if (BLEN == 1) {
         temp |= 0x08;
-    else
+    } else {
         temp &= 0xF7;
+    }
     wiringPiI2CWrite(fd, temp);
 }
 
@@ -72,16 +73,24 @@ void lcd_clear() {
 void lcd_write(int x, int y, const char data[]) {
     int addr, i;
     int tmp;
-    if (x < 0)  x = 0;
-    if (x > 15) x = 15;
-    if (y < 0)  y = 0;
-    if (y > 1)  y = 1;
+    if (x < 0) {
+        x = 0;
+    }
+    if (x > 15) {
+        x = 15;
+    }
+    if (y < 0) {
+        y = 0;
+    }
+    if (y > 1) {
+        y = 1;
+    }
 
     // Move cursor
-    addr = 0x80 + 0x40 * y + x;
+    addr = 0x80 + 0x40 * y + x;                 // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     send_command(addr);
 
-    tmp = strlen(data);
+    tmp = strlen(data);                         // NOLINT(bugprone-narrowing-conversions,cppcoreguidelines-narrowing-conversions)
     for (i = 0; i < tmp; i++) {
         send_data(data[i]);
     }
