@@ -14,16 +14,8 @@
 #define LedPinGreen  29
 #define LedPinBlue   23
 
-void ledInit(void) {
-    softPwmCreate(LedPinRed,  0, 100);
-    softPwmCreate(LedPinGreen,0, 100);
-    softPwmCreate(LedPinBlue, 0, 100);
-}
+void ledInit(void);
 
-void ledColorSet(uchar r_val, uchar g_val, uchar b_val) {
-    softPwmWrite(LedPinRed,   r_val);
-    softPwmWrite(LedPinGreen, g_val);
-    softPwmWrite(LedPinBlue,  b_val);
-}
+void ledColorSet(uchar r_val, uchar g_val, uchar b_val);
 
 #endif //GUESSING_SERVER_LED_H
