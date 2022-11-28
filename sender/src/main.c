@@ -72,10 +72,9 @@ int main(int argc, char *argv[]) {
         close(opts.sock_fd);
         fatal_message(__FILE__, __func__, __LINE__, "[FAIL] rudp_send", EXIT_FAILURE);
     }
+    lcd_write(0, 14, "OK");
     rudp_recv(opts.sock_fd, data_from_server, &from_addr);
     extract_data(data_from_server, high_low, &life);
-
-    lcd_write(0, 14, "OK");
     delay(THREE_SECONDS);
 
     lcd_clear();
