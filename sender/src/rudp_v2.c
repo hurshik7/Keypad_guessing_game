@@ -13,12 +13,9 @@ uint16_t generate_crc16(const char *data_p, size_t length) {
     uint16_t crc = 0xFFFF;          // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
     while (length--) {
-        x = crc >> 8 ^
-            *data_p++;   // NOLINT(hicpp-signed-bitwise, readability-magic-numbers, cppcoreguidelines-avoid-magic-numbers)
-        x ^= x
-                >> 4;                // NOLINT(hicpp-signed-bitwise, readability-magic-numbers, cppcoreguidelines-avoid-magic-numbers)
-        crc = (crc << 8) ^ ((uint16_t) (x << 12)) ^ ((uint16_t) (x << 5)) ^
-              ((uint16_t) x);   // NOLINT(hicpp-signed-bitwise, readability-magic-numbers, cppcoreguidelines-avoid-magic-numbers)
+        x = crc >> 8 ^ *data_p++;   // NOLINT(hicpp-signed-bitwise, readability-magic-numbers, cppcoreguidelines-avoid-magic-numbers)
+        x ^= x >> 4;                // NOLINT(hicpp-signed-bitwise, readability-magic-numbers, cppcoreguidelines-avoid-magic-numbers)
+        crc = (crc << 8) ^ ((uint16_t) (x << 12)) ^ ((uint16_t) (x << 5)) ^ ((uint16_t) x);   // NOLINT(hicpp-signed-bitwise, readability-magic-numbers, cppcoreguidelines-avoid-magic-numbers)
     }
     return crc;
 }
@@ -112,7 +109,7 @@ wait_response_packet:
     // if it receives NAK, or it receives ACK but the seq_no is not equal to the fin packet it sent, resend the fin packet.
     if (response_packet.header.packet_type == RUDP_NAK ||
         (response_packet.header.seq_no != current_seq || response_packet.header.packet_type != RUDP_ACK) ||
-        from_addr.sin_addr.s_addr != to_addr->sin_addr.s_addr) {
+        from_addr.sin_addr.s_addr != to_addr->sin_addr.s_addr) {        // NOLINT(clang-analyzer-core.UndefinedBinaryOperatorResult)
         nwrote = sendto(sock_fd, packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) to_addr,
                         sizeof(struct sockaddr_in));
         if (nwrote == -1) {
