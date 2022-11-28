@@ -110,6 +110,9 @@ int main(int argc, char *argv[]) {
         printf("%s\n", data_from_server);
 
         extract_data(data_from_server, high_low, &life);
+        if (strcmp(high_low, "CORRECT") == 0) {
+            break;
+        }
     }
 
     memset(buffer, '\0', BUFFER_SIZE);
@@ -117,8 +120,13 @@ int main(int argc, char *argv[]) {
     printf("%s\n", buffer);
     result = rudp_send(opts.sock_fd, &to_addr, buffer, BUFFER_SIZE, RUDP_FIN);
     lcd_clear();
-    lcd_write(0, 0, "Finish!");
-    lcd_write(1, 1, "Good job!");
+    if (life > 0) {
+        lcd_write(0, 0, "Congratulation!");
+        lcd_write(1, 1, "You Win!");
+    } else {
+        lcd_write(0, 0, "Oh no, Try again");
+        lcd_write(1, 1, "You lost");
+    }
     close(opts.sock_fd);
     return EXIT_SUCCESS;
 }
