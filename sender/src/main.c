@@ -8,7 +8,6 @@
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#include <assert.h>
 
 #define BUFFER_SIZE (128)
 #define THREE_SECONDS (3000)
@@ -89,8 +88,9 @@ int main(int argc, char *argv[]) {
 
         char msg[MAX_LCD_LENGTH] = { 0 };
         sprintf(buffer, "Life: %d, %s", life, high_low);
-        assert(strlen(buffer) <= MAX_DATA_LENGTH);
-        strncpy(msg, buffer, MAX_DATA_LENGTH);
+        if (strlen(buffer) <= MAX_DATA_LENGTH) {
+            strncpy(msg, buffer, MAX_DATA_LENGTH);              // NOLINT(clang-diagnostic-fortify-source)
+        }
         lcd_write(0, 0, msg);
         lcd_write(0, 1, "number:");
         get_user_num(user_num);
