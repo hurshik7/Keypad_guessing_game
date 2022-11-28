@@ -1,5 +1,6 @@
 #include "error.h"
 #include "lcd.h"
+#include "led.h"
 #include "option_handler.h"
 #include "rudp_v3.h"
 #include <netinet/in.h>
@@ -34,9 +35,9 @@ int main(int argc, char *argv[]) {          // NOLINT(readability-function-cogni
         exit(EXIT_FAILURE);                                                                             // NOLINT(concurrency-mt-unsafe)
     }
 
-    // init lcd
+    // init lcd, led
     {
-//        ledInit();
+        ledInit();
         init_lcd();
     }
 
@@ -149,9 +150,9 @@ void print_status_lcd(const char *status, int user_num) {
     sprintf(first_line, "%s%s", "Status: ", status);
     sprintf(second_line, "%s%d", "Number: ", user_num);
     if (strcmp("CORRECT", status) == 0) {
-//        ledColorSet(0x00,0xff,0x00);                    // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        ledColorSet(0x00,0xff,0x00);                    // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     } else {
-//        ledColorSet(0xff,0x00,0x00);                    // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        ledColorSet(0xff,0x00,0x00);                    // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     }
     lcd_write(0, 0, first_line);
     lcd_write(0, 1, second_line);
