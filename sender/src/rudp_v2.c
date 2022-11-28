@@ -150,7 +150,7 @@ int rudp_recv(int sock_fd, char *recv_data, struct sockaddr_in *from_addr) {
     rudp_packet_t *response_packet;
     if (packet_recv.header.packet_type == RUDP_SYN) {
         if (packet_recv.header.seq_no == 0 && current_seq_no == -1) {
-            fprintf(stdout, "[Start receiving a data from client]\n"); // NOLINT(cert-err33-c, concurrency-mt-unsafe)
+            fprintf(stdout, "[Start receiving a data from %s]\n", inet_ntoa(from_addr->sin_addr)); // NOLINT(cert-err33-c, concurrency-mt-unsafe)
             current_seq_no = 0;
         }
 
