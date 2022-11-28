@@ -97,12 +97,13 @@ int main(int argc, char *argv[]) {          // NOLINT(readability-function-cogni
             printf("Random number: %d\n", random_num);
             lcd_clear();
             lcd_write(0, 0, "Game start!");
-            lcd_write(9, 1, "waiting user num");
+            lcd_write(0, 1, "waiting user num");
             continue;
         }
         if (result == RUDP_FIN) {
             // finish current game and get ready for other client.
             rudp_send(opts.sock_fd, &from_addr, response_data, strlen(response_data), RUDP_INIT);
+            lcd_clear();
             lcd_write(0, 0, "Game finish");
             lcd_write(0, 1, "Waiting a client");
             continue;
@@ -137,6 +138,8 @@ int main(int argc, char *argv[]) {          // NOLINT(readability-function-cogni
 }
 
 void print_status_lcd(const char *status, int user_num) {
+    lcd_clear();
+
     char first_line[BUF_LENGTH];
     char second_line[BUF_LENGTH];
     memset(first_line, 0, BUF_LENGTH);
