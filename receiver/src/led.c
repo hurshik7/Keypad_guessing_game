@@ -2,9 +2,9 @@
 #include "led.h"
 
 void ledInit(void){
-    softPwmCreate(LedPinRed,  0, 100);
-    softPwmCreate(LedPinGreen,0, 100);
-    softPwmCreate(LedPinBlue, 0, 100);
+    softPwmCreate(LedPinRed,  0, INIT_VAL);
+    softPwmCreate(LedPinGreen,0, INIT_VAL);
+    softPwmCreate(LedPinBlue, 0, INIT_VAL);
 }
 
 void ledColorSet(uchar r_val, uchar g_val, uchar b_val){

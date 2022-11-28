@@ -9,6 +9,7 @@
 #define LedPinRed    0
 #define LedPinGreen  1
 #define LedPinBlue   2
+#define INIT_VAL (100)
 
 void ledInit(void);
 
