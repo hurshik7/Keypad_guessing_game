@@ -11,7 +11,6 @@
 
 #define BUFFER_SIZE (128)
 #define THREE_SECONDS (3000)
-#define MAX_LCD_LENGTH (16)
 #define HIGH_LOW_BUF_SZE (10)
 
 void get_user_num(char *user_num);
