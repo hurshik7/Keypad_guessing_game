@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
         close(opts.sock_fd);
         fatal_message(__FILE__, __func__, __LINE__, "[FAIL] rudp_send", EXIT_FAILURE);
     }
-    lcd_write(0, 14, "OK");
+    lcd_write(14, 1, "OK");
     rudp_recv(opts.sock_fd, data_from_server, &from_addr);
     extract_data(data_from_server, high_low, &life);
     delay(THREE_SECONDS);
@@ -123,8 +123,8 @@ int main(int argc, char *argv[]) {
         lcd_write(0, 0, "Congratulation!");
         lcd_write(1, 1, "You Win!");
     } else {
-        lcd_write(0, 0, "Oh no, Try again");
-        lcd_write(1, 1, "You lost");
+        lcd_write(0, 0, "Oh no, Try Again");
+        lcd_write(1, 1, "You Lost");
     }
     close(opts.sock_fd);
     return EXIT_SUCCESS;
