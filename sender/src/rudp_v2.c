@@ -205,6 +205,7 @@ int rudp_recv(int sock_fd, char *recv_data, struct sockaddr_in *from_addr) {
         sendto(sock_fd, response_packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) from_addr,
                sizeof(struct sockaddr_in));
         current_seq_no = -1;
+        return RUDP_FIN;
     } else {
         return RDUP_RECV_FAILURE;
     }
