@@ -6,9 +6,9 @@
 #include <stdio.h>
 
 #define uchar unsigned char
-#define LedPinRed    26
-#define LedPinGreen  27
-#define LedPinBlue   21
+#define LedPinRed    0
+#define LedPinGreen  1
+#define LedPinBlue   2
 
 void ledInit(void);
 
