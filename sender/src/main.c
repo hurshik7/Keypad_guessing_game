@@ -2,7 +2,7 @@
 #include "keypad.h"
 #include "lcd.h"
 #include "option_handler.h"
-#include "rudp_v2.h"
+#include "rudp_v3.h"
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,12 +11,28 @@
 
 #define BUFFER_SIZE (128)
 #define THREE_SECONDS (3000)
-#define MAX_LCD_LENGTH (16)
-#define HIGH_LOW_BUF_SZE (10)
+#define HIGH_LOW_BUF_SIZE (10)
 
+/**
+ * Get 4 digits number from an user using a keypad.
+ * @param user_num a string will store the number from the user
+ */
 void get_user_num(char *user_num);
+
+/**
+ * Extract a status and life info from a data from the server.
+ * @param data_from_server a string represents a data from the server
+ * @param high_low a string will contains the status
+ * @param life a pointer to integer which will store the life information
+ */
 void extract_data(char *data_from_server, char *high_low, int *life);
 
+/**
+ * Drive guessing_client.
+ * @param argc an integer represents the number of the command line arguments
+ * @param argv an array of strings contains the command line arguments
+ * @return an integer
+ */
 int main(int argc, char *argv[]) {
     int result;
     struct options opts;
@@ -64,7 +80,7 @@ int main(int argc, char *argv[]) {
     lcd_write(0, 1, "Wait server...");
     char buffer[BUFFER_SIZE] = {0, };
     char data_from_server[BUFFER_SIZE];
-    char high_low[HIGH_LOW_BUF_SZE] = { 0 };
+    char high_low[HIGH_LOW_BUF_SIZE] = {0 };
     strcpy(buffer, "CONNECT");
     result = rudp_send(opts.sock_fd, &to_addr, buffer, strlen(buffer), RUDP_SYN);
     if (result != -0) {
@@ -160,10 +176,12 @@ void get_user_num(char *user_num) {
 }
 
 void extract_data(char *data_from_server, char *high_low, int *life) {
-    memset(high_low, 0, HIGH_LOW_BUF_SZE);
-    char* tok;
+    memset(high_low, 0, HIGH_LOW_BUF_SIZE);
+    char *tok;
     tok = strtok(data_from_server, "/ ");
     strncpy(high_low, tok, strlen(tok));
     tok = strtok(NULL, "/ ");
-    *life = atoi(tok);                        // NOLINT(cert-err34-c) // We assert that there is no other characters except 0-9 in data_from_server
+    char *ptr;
+    *life = (int) strtol(tok, &ptr, 10);        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 }
+

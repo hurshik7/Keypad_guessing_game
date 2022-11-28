@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(guessing_client
+project(guessing_server
         VERSION 0.0.1
         DESCRIPTION ""
         LANGUAGES C)
@@ -10,9 +10,9 @@ set(CMAKE_C_STANDARD 17)
 set(SOURCE_DIR ${PROJECT_SOURCE_DIR}/src)
 set(INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set(SOURCE_LIST ${SOURCE_DIR}/main.c ${SOURCE_DIR}/error.c ${SOURCE_DIR}/conversion.c
-        ${SOURCE_DIR}/option_handler.c ${SOURCE_DIR}/lcd.c ${SOURCE_DIR}/keypad.c ${SOURCE_DIR}/rudp_v3.c)
+        ${SOURCE_DIR}/option_handler.c ${SOURCE_DIR}/lcd.c ${SOURCE_DIR}/rudp_v3.c ${SOURCE_DIR}/led.c)
 set(HEADER_LIST ${INCLUDE_DIR}/error.h ${INCLUDE_DIR}/conversion.h
-        ${INCLUDE_DIR}/option_handler.h ${INCLUDE_DIR}/lcd.h ${INCLUDE_DIR}/keypad.h ${INCLUDE_DIR}/rudp_v3.h)
+        ${INCLUDE_DIR}/option_handler.h ${INCLUDE_DIR}/lcd.h ${INCLUDE_DIR}/rudp_v3.h ${INCLUDE_DIR}/led.h)
 
 set(SANITIZE FALSE)
 
