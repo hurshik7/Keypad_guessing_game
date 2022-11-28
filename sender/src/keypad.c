@@ -35,7 +35,7 @@ void keyRead(unsigned char* result) {
     }
 }
 
-bool keyCompare(unsigned char* a, unsigned char* b) {
+bool keyCompare(const unsigned char* a, const unsigned char* b) {
     for (int i = 0; i < BUTTON_NUM; i++){
         if (a[i] != b[i]) {
             return false;
@@ -44,13 +44,13 @@ bool keyCompare(unsigned char* a, unsigned char* b) {
     return true;
 }
 
-void keyCopy(unsigned char* a, unsigned char* b){
+void keyCopy(unsigned char* a, const unsigned char* b){
     for (int i = 0; i < BUTTON_NUM; i++){
         a[i] = b[i];
     }
 }
 
-void keyPrint(unsigned char* a) {
+void keyPrint(const unsigned char* a) {
     if (a[0] != 0){
         printf("%c",a[0]);
     }
