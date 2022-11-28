@@ -88,9 +88,7 @@ int main(int argc, char *argv[]) {
 
         char msg[MAX_LCD_LENGTH] = { 0 };
         sprintf(buffer, "Life: %d, %s", life, high_low);
-        if (strlen(buffer) <= MAX_DATA_LENGTH) {
-            strncpy(msg, buffer, MAX_DATA_LENGTH);              // NOLINT(clang-diagnostic-fortify-source)
-        }
+        strncpy(msg, buffer, MAX_DATA_LENGTH);              // NOLINT(clang-diagnostic-fortify-source)
         lcd_write(0, 0, msg);
         lcd_write(0, 1, "number:");
         get_user_num(user_num);
