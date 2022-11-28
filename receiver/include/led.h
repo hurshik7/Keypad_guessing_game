@@ -11,8 +11,17 @@
 #define LedPinBlue   2
 #define INIT_VAL (100)
 
+/**
+ * Initiate LED.
+ */
 void ledInit(void);
 
+/**
+ * Set a color of LED.
+ * @param r_val an unsigned char represents red value
+ * @param g_val an unsigned char represents green value
+ * @param b_val an unsigned char represents blue value
+ */
 void ledColorSet(uchar r_val, uchar g_val, uchar b_val);
 
 #endif //GUESSING_SERVER_LED_H
