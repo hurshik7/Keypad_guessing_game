@@ -3,8 +3,8 @@
 //
 
 #include "rudp_v2.h"
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 
@@ -137,7 +137,7 @@ wait_response_packet:
 // recv rudp packet and send response packet
 int rudp_recv(int sock_fd, char *recv_data, struct sockaddr_in *from_addr) {
     rudp_packet_t packet_recv;
-    static long current_seq_no = -1;
+    static uint32_t current_seq_no = -1;
     socklen_t from_addr_len = sizeof(struct sockaddr_in);
     ssize_t nread;
 
