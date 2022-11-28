@@ -10,7 +10,6 @@
 #include <unistd.h>
 
 #define BUFFER_SIZE (128)
-#define DEFAULT_LIFE (10)
 #define THREE_SECONDS (3000)
 #define MAX_LCD_LENGTH (16)
 #define HIGH_LOW_BUF_SZE (10)
@@ -59,7 +58,7 @@ int main(int argc, char *argv[]) {
         fatal_message(__FILE__, __func__, __LINE__, "[FAIL] initiate proxy server's sockaddr_in", EXIT_FAILURE);
     }
 
-    int life = DEFAULT_LIFE;
+    int life = 0;
 	// start ui, connect server
 	lcd_write(0, 0, "Welcome to Guess");
     lcd_write(0, 1, "Wait server...");
