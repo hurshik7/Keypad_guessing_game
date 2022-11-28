@@ -1,6 +1,6 @@
 #include "keypad.h"
 
-unsigned char KEYS[BUTTON_NUM] = {
+static unsigned char KEYS[BUTTON_NUM] = {
 	'1','2','3','A',
 	'4','5','6','B',
 	'7','8','9','C',
