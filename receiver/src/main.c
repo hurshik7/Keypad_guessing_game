@@ -12,6 +12,9 @@
 
 #define MAX_TARGET_NUM (10000)              // NOLINT(modernize-macro-to-enum)
 #define DEFAULT_LIFE (5)                    // NOLINT(modernize-macro-to-enum)
+#define BUF_LENGTH (128)                    // NOLINT(modernize-macro-to-enum)
+
+void print_status_lcd(const char *status, int user_num);
 
 int main(int argc, char *argv[]) {          // NOLINT(readability-function-cognitive-complexity)
     int result;
@@ -33,6 +36,7 @@ int main(int argc, char *argv[]) {          // NOLINT(readability-function-cogni
 
     // init lcd
     {
+        ledInit();
         init_lcd();
     }
 
@@ -74,6 +78,8 @@ int main(int argc, char *argv[]) {          // NOLINT(readability-function-cogni
     printf("Listening port %d\n", opts.port_in);
     int random_num;
 
+    lcd_write(0, 0, "Waiting");
+    lcd_write(7, 1, "a client");
     while (1) {
         char data[MAX_DATA_LENGTH];
         char response_data[MAX_DATA_LENGTH];
@@ -81,6 +87,7 @@ int main(int argc, char *argv[]) {          // NOLINT(readability-function-cogni
         memset(data, '\0', MAX_DATA_LENGTH);
         result = rudp_recv(opts.sock_fd, data, &from_addr);
         if (strcmp(data, "CONNECT") == 0) {
+            // init the game setting and start the game.
             printf("Client ip address: %s\n", inet_ntoa(from_addr.sin_addr));       // NOLINT(concurrency-mt-unsafe)
             life = DEFAULT_LIFE;
             memset(response_data, 0 , MAX_DATA_LENGTH);
@@ -88,10 +95,16 @@ int main(int argc, char *argv[]) {          // NOLINT(readability-function-cogni
             rudp_send(opts.sock_fd, &from_addr, response_data, strlen(response_data), RUDP_SYN);
             random_num = rand() % MAX_TARGET_NUM;                                   // NOLINT(cert-msc30-c,cert-msc50-cpp,clang-analyzer-security.insecureAPI.rand,concurrency-mt-unsafe)
             printf("Random number: %d\n", random_num);
+            lcd_clear();
+            lcd_write(0, 0, "Game start!");
+            lcd_write(9, 1, "waiting user num");
             continue;
         }
         if (result == RUDP_FIN) {
+            // finish current game and get ready for other client.
             rudp_send(opts.sock_fd, &from_addr, response_data, strlen(response_data), RUDP_INIT);
+            lcd_write(0, 0, "Game finish");
+            lcd_write(0, 1, "Waiting a client");
             continue;
         }
 
@@ -102,10 +115,13 @@ int main(int argc, char *argv[]) {          // NOLINT(readability-function-cogni
         memset(response_data, '\0', MAX_DATA_LENGTH);
         if (client_num > random_num) {                              // NOLINT(clang-analyzer-core.UndefinedBinaryOperatorResult)
             sprintf(response_data, "HIGH/%d", --life);
+            print_status_lcd("HIGH", client_num);
         } else if (client_num < random_num) {
             sprintf(response_data, "LOW/%d", --life);
+            print_status_lcd("HIGH", client_num);
         } else {
             sprintf(response_data, "CORRECT/%d", life);
+            print_status_lcd("HIGH", client_num);
         }
         printf("%s\n", response_data);
 
@@ -118,4 +134,20 @@ int main(int argc, char *argv[]) {          // NOLINT(readability-function-cogni
 
     close(opts.sock_fd);
     return EXIT_SUCCESS;
+}
+
+void print_status_lcd(const char *status, int user_num) {
+    char first_line[BUF_LENGTH];
+    char second_line[BUF_LENGTH];
+    memset(first_line, 0, BUF_LENGTH);
+    memset(second_line, 0, BUF_LENGTH);
+    sprintf(first_line, "%s%s", "Status: ", status);
+    sprintf(second_line, "%s%d", "Number: ", user_num);
+    if (strcmp("CORRECT", status) == 0) {
+        ledColorSet(0x00,0xff,0x00);
+    } else {
+        ledColorSet(0xff,0x00,0x00);
+    }
+    lcd_write(0, 0, first_line);
+    lcd_write(0, 1, second_line);
 }
