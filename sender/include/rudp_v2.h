@@ -14,6 +14,7 @@
 #define RUDP_ACK (1)
 #define RUDP_FIN (2)
 #define RUDP_NAK (3)
+#define RUDP_INIT (4)
 #define RUDP_SEND_SUCCESS (0)
 #define RUDP_SEND_FAILURE (1)
 #define RDUP_RECV_SUCCESS (0)
@@ -74,7 +75,7 @@ void init_rudp_header(uint16_t type, uint32_t seq_no, rudp_header_t *header_out)
 void deserialize_packet(rudp_packet_t *packet);
 
 int rudp_send(int sock_fd, struct sockaddr_in *to_addr, const char* data, size_t data_size, uint16_t packet_type);
-int rudp_recv(int sock_fd, char *recv_data);
+int rudp_recv(int sock_fd, char *recv_data, struct sockaddr_in *from_addr);
 
 #endif //RUDP_V2_H
 

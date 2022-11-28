@@ -9,14 +9,14 @@
 #define COLS  4
 #define BUTTON_NUM (ROWS * COLS)
 
-void keypadInit();
+void keypadInit(void);
 void keyRead(unsigned char* result);
-bool keyCompare(unsigned char* a, unsigned char* b);
-void keyCopy(unsigned char* a, unsigned char* b);
-void keyPrint(unsigned char* a);
+bool keyCompare(const unsigned char* a, const unsigned char* b);
+void keyCopy(unsigned char* a, const unsigned char* b);
+void keyPrint(const unsigned char* a);
 void keyPrintLCD(unsigned char* a);
 void keyClear(unsigned char* a);
-int keyIndexOf(const char value);
+int keyIndexOf(char value);
 char getKey(unsigned char* a);
 
 #endif /* KEYPAD_H */

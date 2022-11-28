@@ -9,9 +9,9 @@
 void write_word(int data);
 void send_command(int comm);
 void send_data(int data);
-void init_lcd();
-void lcd_clear();
-void lcd_write(int x, int y, char data[]);
+void init_lcd(void);
+void lcd_clear(void);
+void lcd_write(int x, int y, const char data[]);
 
 #endif /* LCD_H */
 

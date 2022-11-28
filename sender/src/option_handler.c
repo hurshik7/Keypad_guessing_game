@@ -40,7 +40,7 @@ int parse_arguments(int argc, char *argv[], struct options *opts)
                 opts->port_out = parse_port(optarg, 10, &is_error);        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
                 if (is_error == FAIL)
                 {
-                    return FAIL_WITH_MSG;
+                    return FAIL;
                 }
                 break;
             }

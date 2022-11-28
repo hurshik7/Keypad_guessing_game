@@ -1,14 +1,14 @@
 #include "keypad.h"
 
-unsigned char KEYS[BUTTON_NUM] = {
+static const unsigned char KEYS[BUTTON_NUM] = {
 	'1','2','3','A',
 	'4','5','6','B',
 	'7','8','9','C',
 	'*','0','#','D'
 };
 
-static unsigned char rowPins[ROWS] = {1, 4, 5, 6};
-static unsigned char colPins[COLS] = {12, 3, 2, 0};
+static const unsigned char rowPins[ROWS] = {1, 4, 5, 6};
+static const unsigned char colPins[COLS] = {12, 3, 2, 0};
 
 void keypadInit(void) {
     for (int i = 0; i < 4; i++) {
@@ -35,7 +35,7 @@ void keyRead(unsigned char* result) {
     }
 }
 
-bool keyCompare(unsigned char* a, unsigned char* b) {
+bool keyCompare(const unsigned char* a, const unsigned char* b) {
     for (int i = 0; i < BUTTON_NUM; i++){
         if (a[i] != b[i]) {
             return false;
@@ -44,13 +44,13 @@ bool keyCompare(unsigned char* a, unsigned char* b) {
     return true;
 }
 
-void keyCopy(unsigned char* a, unsigned char* b){
+void keyCopy(unsigned char* a, const unsigned char* b){
     for (int i = 0; i < BUTTON_NUM; i++){
         a[i] = b[i];
     }
 }
 
-void keyPrint(unsigned char* a) {
+void keyPrint(const unsigned char* a) {
     if (a[0] != 0){
         printf("%c",a[0]);
     }

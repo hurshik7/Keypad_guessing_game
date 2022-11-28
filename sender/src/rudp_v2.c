@@ -3,8 +3,8 @@
 //
 
 #include "rudp_v2.h"
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 
@@ -13,12 +13,9 @@ uint16_t generate_crc16(const char *data_p, size_t length) {
     uint16_t crc = 0xFFFF;          // NOLINT(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 
     while (length--) {
-        x = crc >> 8 ^
-            *data_p++;   // NOLINT(hicpp-signed-bitwise, readability-magic-numbers, cppcoreguidelines-avoid-magic-numbers)
-        x ^= x
-                >> 4;                // NOLINT(hicpp-signed-bitwise, readability-magic-numbers, cppcoreguidelines-avoid-magic-numbers)
-        crc = (crc << 8) ^ ((uint16_t) (x << 12)) ^ ((uint16_t) (x << 5)) ^
-              ((uint16_t) x);   // NOLINT(hicpp-signed-bitwise, readability-magic-numbers, cppcoreguidelines-avoid-magic-numbers)
+        x = crc >> 8 ^ *data_p++;   // NOLINT(hicpp-signed-bitwise, readability-magic-numbers, cppcoreguidelines-avoid-magic-numbers)
+        x ^= x >> 4;                // NOLINT(hicpp-signed-bitwise, readability-magic-numbers, cppcoreguidelines-avoid-magic-numbers)
+        crc = (crc << 8) ^ ((uint16_t) (x << 12)) ^ ((uint16_t) (x << 5)) ^ ((uint16_t) x);   // NOLINT(hicpp-signed-bitwise, readability-magic-numbers, cppcoreguidelines-avoid-magic-numbers)
     }
     return crc;
 }
@@ -66,20 +63,25 @@ int rudp_send(int sock_fd, struct sockaddr_in *to_addr, const char *data, size_t
     struct sockaddr_in from_addr;
     socklen_t from_addr_len = sizeof(struct sockaddr_in);
 
+    if (packet_type == RUDP_INIT) {
+        current_seq = 0;
+        return RUDP_SEND_SUCCESS;
+    }
+
     struct timeval tv;
     tv.tv_sec = TIMEOUT_IN_SECOND;
     tv.tv_usec = 0;
     // set timeout
     setsockopt(sock_fd, SOL_SOCKET, SO_RCVTIMEO, (const char *) &tv, sizeof(tv));
 
-    // create rudp fin packet header
+    // create rudp packet header
     rudp_header_t header;
     init_rudp_header(packet_type, current_seq, &header);
 
-    // create rudp fin packet
+    // create rudp packet
     rudp_packet_t *packet = create_rudp_packet_malloc(&header, data_size, data);
 
-    // sendto proxy server
+    // sendto server
     nwrote = sendto(sock_fd, packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) to_addr,
                     sizeof(struct sockaddr_in));
     if (nwrote == -1) {
@@ -87,7 +89,7 @@ int rudp_send(int sock_fd, struct sockaddr_in *to_addr, const char *data, size_t
         return RUDP_SEND_FAILURE;
     }
 
-    wait_response_packet:
+wait_response_packet:
     nread = recvfrom(sock_fd, &response_packet, sizeof(rudp_packet_t), 0, (struct sockaddr *) &from_addr,
                      &from_addr_len);
     if (nread == -1) {
@@ -107,7 +109,7 @@ int rudp_send(int sock_fd, struct sockaddr_in *to_addr, const char *data, size_t
     // if it receives NAK, or it receives ACK but the seq_no is not equal to the fin packet it sent, resend the fin packet.
     if (response_packet.header.packet_type == RUDP_NAK ||
         (response_packet.header.seq_no != current_seq || response_packet.header.packet_type != RUDP_ACK) ||
-        from_addr.sin_addr.s_addr != to_addr->sin_addr.s_addr) {
+        from_addr.sin_addr.s_addr != to_addr->sin_addr.s_addr) {        // NOLINT(clang-analyzer-core.UndefinedBinaryOperatorResult)
         nwrote = sendto(sock_fd, packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) to_addr,
                         sizeof(struct sockaddr_in));
         if (nwrote == -1) {
@@ -121,20 +123,24 @@ int rudp_send(int sock_fd, struct sockaddr_in *to_addr, const char *data, size_t
     // increase sequence number and free the allocated packet.
     free(packet);
     current_seq++;
+
+    tv.tv_sec = 0;
+    tv.tv_usec = 0;
+    // set timeout
+    setsockopt(sock_fd, SOL_SOCKET, SO_RCVTIMEO, (const char *) &tv, sizeof(tv));
     return RUDP_SEND_SUCCESS;
 }
 
 // recv rudp packet and send response packet
-int rudp_recv(int sock_fd, char *recv_data) {
+int rudp_recv(int sock_fd, char *recv_data, struct sockaddr_in *from_addr) {
     rudp_packet_t packet_recv;
     static long current_seq_no = -1;
-    struct sockaddr_in from_addr;
     socklen_t from_addr_len = sizeof(struct sockaddr_in);
     ssize_t nread;
 
     char buffer[MAX_DATA_LENGTH];
 
-    nread = recvfrom(sock_fd, &packet_recv, sizeof(rudp_packet_t), 0, (struct sockaddr *) &from_addr, &from_addr_len);
+    nread = recvfrom(sock_fd, &packet_recv, sizeof(rudp_packet_t), 0, (struct sockaddr *) from_addr, &from_addr_len);
     if (nread == -1) {
         return RDUP_RECV_FAILURE;
     }
@@ -144,7 +150,7 @@ int rudp_recv(int sock_fd, char *recv_data) {
     rudp_packet_t *response_packet;
     if (packet_recv.header.packet_type == RUDP_SYN) {
         if (packet_recv.header.seq_no == 0 && current_seq_no == -1) {
-            fprintf(stdout, "[Start receiving a data from client]\n"); // NOLINT(cert-err33-c, concurrency-mt-unsafe)
+            fprintf(stdout, "[Start receiving a data from %s]\n", inet_ntoa(from_addr->sin_addr)); // NOLINT(cert-err33-c, concurrency-mt-unsafe)
             current_seq_no = 0;
         }
 
@@ -154,14 +160,25 @@ int rudp_recv(int sock_fd, char *recv_data) {
         if (check_sum_of_data_in_pack != packet_recv.check_sum) {
             init_rudp_header(RUDP_NAK, packet_recv.header.seq_no, &response_packet_header);
             response_packet = create_rudp_packet_malloc(&response_packet_header, 0, NULL);
-            sendto(sock_fd, response_packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) &from_addr,
+            sendto(sock_fd, response_packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) from_addr,
                    sizeof(struct sockaddr_in));
             free(response_packet);
             return RDUP_RECV_FAILURE;
         }
 
         // if the seq_no is different from the current seq_no, just ignore the packet
-        if (packet_recv.header.seq_no != current_seq_no) {
+        if ((long) packet_recv.header.seq_no != current_seq_no) {
+            return RDUP_RECV_FAILURE;
+        }
+
+        // if the sender sent the same packet with previous one, send ACK to client again for the same packet.
+        // this situation only happens when the client can not receive the ACK of the packet from the server
+        if ((long) packet_recv.header.seq_no != current_seq_no) {
+            init_rudp_header(RUDP_ACK, packet_recv.header.seq_no, &response_packet_header);
+            response_packet = create_rudp_packet_malloc(&response_packet_header, 0, NULL);
+            sendto(sock_fd, response_packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) from_addr,
+                   sizeof(struct sockaddr_in));
+            free(response_packet);
             return RDUP_RECV_FAILURE;
         }
 
@@ -175,7 +192,7 @@ int rudp_recv(int sock_fd, char *recv_data) {
         // send ACK
         init_rudp_header(RUDP_ACK, packet_recv.header.seq_no, &response_packet_header);
         response_packet = create_rudp_packet_malloc(&response_packet_header, 0, NULL);
-        sendto(sock_fd, response_packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) &from_addr,
+        sendto(sock_fd, response_packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) from_addr,
                sizeof(struct sockaddr_in));
 
         // free response packet_recv and increase current_seq_no
@@ -185,7 +202,7 @@ int rudp_recv(int sock_fd, char *recv_data) {
         // send ACT to FIN
         init_rudp_header(RUDP_ACK, packet_recv.header.seq_no, &response_packet_header);
         response_packet = create_rudp_packet_malloc(&response_packet_header, 0, NULL);
-        sendto(sock_fd, response_packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) &from_addr,
+        sendto(sock_fd, response_packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) from_addr,
                sizeof(struct sockaddr_in));
         current_seq_no = -1;
     } else {
