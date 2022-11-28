@@ -58,28 +58,31 @@ int main(int argc, char *argv[]) {
         close(opts.sock_fd);
         fatal_message(__FILE__, __func__, __LINE__, "[FAIL] initiate proxy server's sockaddr_in", EXIT_FAILURE);
     }
-    
+
+    int life = DEFAULT_LIFE;
 	// start ui, connect server
 	lcd_write(0, 0, "Welcome to Guess");
     lcd_write(0, 1, "Wait server...");
     char buffer[BUFFER_SIZE] = {0, };
+    char data_from_server[BUFFER_SIZE];
+    char high_low[HIGH_LOW_BUF_SZE] = { 0 };
     strcpy(buffer, "CONNECT");
     result = rudp_send(opts.sock_fd, &to_addr, buffer, strlen(buffer), RUDP_SYN);
     if (result != -0) {
         close(opts.sock_fd);
         fatal_message(__FILE__, __func__, __LINE__, "[FAIL] rudp_send", EXIT_FAILURE);
     }
+    extract_data(data_from_server, high_low, &life);
+
     lcd_write(0, 14, "OK");
     delay(THREE_SECONDS);
 
     lcd_clear();
     lcd_write(0, 0, "Welcome to Guess");
-    lcd_write(1, 1, "Guess 0 to 9999");
+    lcd_write(0, 1, "Guess 0 to 9999");
     delay(THREE_SECONDS);
     lcd_clear();
 
-    int life = DEFAULT_LIFE;
-    char high_low[HIGH_LOW_BUF_SZE] = { 0 };
     while (life > 0) {
         char user_num[5] = {'\0'};
         lcd_clear();
@@ -102,7 +105,6 @@ int main(int argc, char *argv[]) {
             fatal_message(__FILE__, __func__, __LINE__, "[FAIL] rudp_send", EXIT_FAILURE);
         }
 
-        char data_from_server[BUFFER_SIZE];
         memset(data_from_server, '\0', BUFFER_SIZE);
         rudp_recv(opts.sock_fd, data_from_server, &from_addr);
         printf("%s\n", data_from_server);
