@@ -176,7 +176,7 @@ int rudp_recv(int sock_fd, char *recv_data, struct sockaddr_in *from_addr) {
 
         // if the sender sent the same packet with previous one, send ACK to client again for the same packet.
         // this situation only happens when the client can not receive the ACK of the packet from the server
-        if (packet_recv.header.seq_no != current_seq_no) {
+        if ((long) packet_recv.header.seq_no != current_seq_no) {
             init_rudp_header(RUDP_ACK, packet_recv.header.seq_no, &response_packet_header);
             response_packet = create_rudp_packet_malloc(&response_packet_header, 0, NULL);
             sendto(sock_fd, response_packet, sizeof(rudp_packet_t), 0, (const struct sockaddr *) from_addr,
