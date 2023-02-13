@@ -94,11 +94,7 @@ Build the circuit for the client and server like below.
 The circuit for the server is as follows. You will need a LCD1602, a RGB Led, and three 220 Ohm(Ω) resistors.
 
 
-<p id="gdcalert1" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image1.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert2">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![alt_text](images/image1.png "image_tooltip")
-
+![alt text](https://github.com/hurshik7/Keypad_guessing_game/blob/main/img/server1.png?raw=true)
 
 _Figure 1. Server circuit_
 
