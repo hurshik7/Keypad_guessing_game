@@ -54,11 +54,10 @@ This guide is intended for users who have basic experience with the POSIX system
 
 ## Obtaining
 
-Download project-v1.pax.Z file and extract the file with the following commands.
-
+Clone this repo.
 
 ```
-zcat project-v1.pax.Z | pax -r
+git clone https://github.com/hurshik7/Keypad_guessing_game.git
 ```
 
 
@@ -93,7 +92,6 @@ Build the circuit for the client and server like below.
 #### Server
 
 The circuit for the server is as follows. You will need a LCD1602, a RGB Led, and three 220 Ohm(Ω) resistors.
-
 
 
 <p id="gdcalert1" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image1.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert2">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
@@ -313,3 +311,6 @@ When the game starts, on the client side you can enter numbers via the keypad. E
 * Play the game by entering numbers using the keypad.
 * When a hint is received from the server, the hint and the number of lives remaining are printed on the LCD.
 * When you win or lose the game, the results are displayed on the LCD.
+
+# Reference
+* https://www.sunfounder.com/
