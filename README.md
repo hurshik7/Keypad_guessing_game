@@ -98,18 +98,14 @@ The circuit for the server is as follows. You will need a LCD1602, a RGB Led, an
 
 _Figure 1. Server circuit_
 
-<p id="gdcalert2" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image2.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert3">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![alt_text](images/image2.png "image_tooltip")
-
+![alt text](https://github.com/hurshik7/Keypad_guessing_game/blob/main/img/server2.png?raw=true)
 
 _Figure 2. LCD1602. (“SunFounder Da Vinci Kit for Raspberry Pi — SunFounder davinci-kit-for-raspberry-pi documentation”)_
 
 <p id="gdcalert3" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image3.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert4">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
 
 
-![alt_text](images/image3.png "image_tooltip")
+![alt text](https://github.com/hurshik7/Keypad_guessing_game/blob/main/img/server3.png?raw=true)
 
 
 _Figure 3. RGB Led. (“SunFounder Da Vinci Kit for Raspberry Pi — SunFounder davinci-kit-for-raspberry-pi documentation”)_
@@ -121,20 +117,13 @@ The circuit for the client is as follows. You will also need an LCD1602, a keypa
 
 
 
-<p id="gdcalert4" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image4.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert5">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![alt_text](images/image4.png "image_tooltip")
+![alt text](https://github.com/hurshik7/Keypad_guessing_game/blob/main/img/client1.png?raw=true)
 
 
 _Figure 4. Client circuit_
 
 
-
-<p id="gdcalert5" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image5.png). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert6">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![alt_text](images/image5.png "image_tooltip")
+![alt text](https://github.com/hurshik7/Keypad_guessing_game/blob/main/img/client2.png?raw=true)
 
 
 _Figure 5. Keypad. (“SunFounder Da Vinci Kit for Raspberry Pi — SunFounder davinci-kit-for-raspberry-pi documentation”)_
@@ -215,22 +204,13 @@ First, both server and client can check the current status through LCD. Run the 
 
 * Server
 
-
-
-<p id="gdcalert6" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image6.jpg). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert7">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![alt_text](images/image6.jpg "image_tooltip")
+![alt text](https://github.com/hurshik7/Keypad_guessing_game/blob/main/img/lcd1.png?raw=true)
  
 
 (waiting a client)
 
 
-
-<p id="gdcalert7" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image7.jpg). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert8">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![alt_text](images/image7.jpg "image_tooltip")
+![alt text](https://github.com/hurshik7/Keypad_guessing_game/blob/main/img/lcd2.png?raw=true)
  
 
 (when a client connects to this server)
@@ -239,12 +219,7 @@ First, both server and client can check the current status through LCD. Run the 
 
 * Client
 
-
-
-<p id="gdcalert8" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image8.jpg). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert9">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![alt_text](images/image8.jpg "image_tooltip")
+![alt text](https://github.com/hurshik7/Keypad_guessing_game/blob/main/img/lcd3.png?raw=true)
 
 
 (When the first data communication to the server is successful, which means when connected to the server)
@@ -252,11 +227,7 @@ First, both server and client can check the current status through LCD. Run the 
 (we don’t want to use the term “connect” since we are using reliable UDP not TCP)
 
 
-
-<p id="gdcalert9" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: inline image link here (to images/image9.jpg). Store image on your image server and adjust path/filename/extension if necessary. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert10">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
-
-![alt_text](images/image9.jpg "image_tooltip")
+![alt text](https://github.com/hurshik7/Keypad_guessing_game/blob/main/img/lcd4.png?raw=true)
 
 
 (when the game starts)
