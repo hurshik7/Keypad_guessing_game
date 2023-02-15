@@ -184,13 +184,11 @@ Note: The compiler can be specified by passing one of the following to cmake whe
 
  You are able to configure the ip address and port number of the server. The default port number is `5050` if you do not input the argument. These are the examples of commands to run the server. Let’s assume the current directory is `source/guessing_server/` when running the server.
 
-	`./build/guessing_server`
-
-
 ```
-	./build/guessing_server -i <ip address>
-	./build/guessing_server -p <port number>
-	./build/guessing_server -i <ip address> -p <port number>
+./build/guessing_server
+./build/guessing_server -i <ip address>
+./build/guessing_server -p <port number>
+./build/guessing_server -i <ip address> -p <port number>
 ```
 
 
@@ -199,13 +197,10 @@ Note: The compiler can be specified by passing one of the following to cmake whe
 
 You are able to configure the IP address and port of the **server**. Let's assume the current directory is `source/guessing_client/` when running the client. If you do not input the port number with the -p flag, the default port number for the server is `5050`. (The ip address of the proxy server must be provided with -o flag)
 
-	`./build/guessing_client -o 192.168.0.1`
-
-
 ```
-	./build/guessing_client -o 192.168.0.1 -p 5000
+./build/guessing_client -o 192.168.0.1
+./build/guessing_client -o 192.168.0.1 -p 5000
 ```
-
 
 
 # How To Play
@@ -278,7 +273,7 @@ When the game starts, on the client side you can enter numbers via the keypad. E
 
 
 
-* All socket communication uses reliable UDP.
+* All socket communication uses Reliable UDP.
 * When you run the server you can see a message on the console with the port number. The default port number is `5050`.
 
     ```
